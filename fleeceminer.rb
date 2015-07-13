@@ -21,12 +21,9 @@ module Fleeceminer
     def run(start, incr)
       cur = start
       prefix = "#{@latest},#{OWNER_KEY},"
-      start_digest = Digest::SHA2.new
-      start_digest << prefix
       while true
-        digest = start_digest.dup.update(cur.to_s).hexdigest
-        if digest.start_with?(SOLUTION_PREFIX)
-          solution = prefix + cur.to_s
+        solution = prefix + cur.to_s
+        if (digest = Digest::SHA2.hexdigest(solution)).start_with?(SOLUTION_PREFIX)
           @output.puts([solution, digest].join('|'))
           exit
         end
