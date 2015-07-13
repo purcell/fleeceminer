@@ -7,14 +7,10 @@ require 'uri'
 
 module Fleeceminer
 
-  ALLOWED_SOLUTION_CHARS = ('a'..'z').to_a + ('0'..'9').to_a
   OWNER_KEY = "steve"
   SOLUTION_PREFIX = "f1eece"
   NUM_WORKERS = 4
   CHECK_INTERVAL = 2.9 # seconds
-
-  Request = Struct.new(:start, :attempt)
-  Response = Struct.new(:start, :solution)
 
   class Worker
     def initialize(output, latest)
