@@ -40,10 +40,10 @@ module Fleeceminer
     end
 
     def run
-      just_found_one = false
+      need_latest_hash = true
       while true
-        task_workers_with(fetch_latest) unless just_found_one
-        just_found_one = wait_for_solution
+        task_workers_with(fetch_latest) if need_latest_hash
+        need_latest_hash = !wait_for_solution
       end
     end
 
@@ -70,6 +70,7 @@ module Fleeceminer
             if response.code == 400 && response.body =~ /latest hash \((f1eece.*?)\)/
               # Quickly recover without doing another fetch
               task_workers_with($1)
+              return true
             end
             return response.code == 200
           else
