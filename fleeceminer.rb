@@ -47,7 +47,7 @@ module Fleeceminer
     end
 
     def start_workers(latest)
-      STDERR.puts("Tasking workers with #{latest}")
+      STDERR.puts("New task: #{latest}")
       (0...NUM_WORKERS).each do |n|
         rd, wr = IO.pipe
         @worker_streams << rd
@@ -62,10 +62,11 @@ module Fleeceminer
         ready.first.each do |worker_output|
           solution, digest = worker_output.readline.strip.split("|")
           if solution.start_with?(@latest)
+            STDERR.puts('-' * 78)
             STDERR.puts("SOLUTION! #{solution}")
             task_workers_with(digest)
             response = Net::HTTP.post_form(URI('https://fleececoin.herokuapp.com/coins'), "coin" => solution)
-            STDERR.puts("Response #{response.code}:\n#{response.body}")
+            STDERR.puts("Response: #{response.code} #{response.body}")
             if response.code == 400 && response.body =~ /latest hash \((f1eece.*?)\)/
               # Quickly recover without doing another fetch
               task_workers_with($1)
@@ -89,7 +90,6 @@ module Fleeceminer
     end
 
     def fetch_latest
-      STDERR.puts("Fetching latest")
       open('https://fleececoin.herokuapp.com/current', &:read)
     end
 
