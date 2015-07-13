@@ -40,10 +40,9 @@ module Fleeceminer
     end
 
     def run
-      need_latest_hash = true
       while true
-        task_workers_with(fetch_latest) if need_latest_hash
-        need_latest_hash = !wait_for_solution
+        task_workers_with(fetch_latest)
+        wait_for_solution
       end
     end
 
@@ -70,15 +69,13 @@ module Fleeceminer
             if response.code == 400 && response.body =~ /latest hash \((f1eece.*?)\)/
               # Quickly recover without doing another fetch
               task_workers_with($1)
-              return true
             end
-            return response.code == 200
+            return # Worker streams will have been closed by this stage
           else
             STDERR.puts("Warning: Stale solution received")
           end
         end
       end
-      false
     end
 
     def task_workers_with(latest)
