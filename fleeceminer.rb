@@ -34,8 +34,6 @@ module Fleeceminer
 
   class Supervisor
     def initialize
-      @requests = Queue.new
-      @responses = Queue.new
       @latest = nil
       @worker_pids = []
       @worker_streams = []
