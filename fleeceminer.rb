@@ -10,7 +10,7 @@ module Fleeceminer
   OWNER_KEY = "steve"
   SOLUTION_PREFIX = "f1eece"
   NUM_WORKERS = 4
-  CHECK_INTERVAL = 2.9 # seconds
+  CHECK_INTERVAL = 3.0 # seconds
 
   class Worker
     def initialize(output, latest)
